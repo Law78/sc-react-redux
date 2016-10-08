@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 //aggiunte per Redux
 import configureStore from './stores/configureStore';
 import * as actions from './actions';
+import { Provider } from 'react-redux';
 
 import Stream from './components/Stream';
 
@@ -24,6 +25,8 @@ const store = configureStore();
 store.dispatch(actions.setTracks(tracks));
 
 ReactDOM.render(
-  <Stream />,
+  <Provider store={store}>
+    <Stream />
+  </Provider>,
   document.getElementById('app')
 );

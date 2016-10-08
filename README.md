@@ -283,3 +283,80 @@ export default function configureStore(initialState) {
 }
 ```
 10) Lanciamo con npm start e wow. In console vediamo il nostro nuovo stato, ma nel browser no. Questo perchè il componente Stream ancora non è connesso allo Store.
+
+
+### FINE TERZA Parte
+
+# Connessione React-Redux
+
+1) Installo con:
+```
+npm install --save React-Redux
+```
+2) Abbiamo bisogno di 2 step per connettere i nostri componenti React a Redux:
+PROVIDER = ci aiuta a rendere disponibile lo STORE e le sue funzionalità a tutti i componenti.
+CONNECT = è la funzionalità con cui wrappo il componente che deve accedere allo STORE.
+3) In index.js di App vado ad importare {Provider} from 'react-redux' e wrappo lo STREAM in:
+```jsx
+<Provider store={store}>
+  <Stream />
+</Provider>
+```
+4) In Stream.jsx vado ad importare {Connect} from 'react-redux' e creo la funzione che mi imposta il mio sub-stato di interesse e infine esporto la connect per la creazione di un higher order component:
+```js
+function mapStateToProps(state) {
+  const {tracks} = state;
+  return {
+    tracks
+  }
+}
+
+export default connect(mapStateToProps)(Stream);
+```
+Un HOC è una funzione che prende un componente e ritorna un altro componente che lo include. In questo caso il componente che include Stream sarà un componente in grado di "colloquiare" con lo STORE per i dati di cui ha effettivamente bisogno lo STREAM.
+
+### FINE QUARTA Parte
+
+# Refactoring
+
+1) Ora come ora i test non funzioneranno. Per far si che continuino a funzionare, andiamo a separare il componente STREAM in due parti: CONTAINER COMPONENT e PRESENTER COMPONENT, splittandolo in due file in una cartella Stream: un file index.js
+```js
+import { connect } from 'react-redux';
+import Stream from './presenter';
+
+function mapStateToProps(state) {
+  const {tracks} = state;
+  return {
+    tracks
+  }
+}
+
+export default connect(mapStateToProps)(Stream);
+
+```
+
+ed un file presenter.jsx:
+
+```js
+import React from 'react';
+
+function Stream({ tracks = [] }) {
+  return (
+    <div>
+      {
+        tracks.map((track, key) => {
+          return <div className="track" key={key}>{track.title}</div>;
+        })
+      }
+    </div>
+  );
+}
+
+export default Stream;
+```
+2) In Stream.spec.js vado a modificare così la import del componente:
+ ```
+ import Stream from '../../src/components/Stream/presenter';
+ ```
+
+ L'APP per ora muore così :)

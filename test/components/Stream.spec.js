@@ -1,4 +1,4 @@
-import Stream from '../../src/components/Stream';
+import Stream from '../../src/components/Stream/presenter';
 import { shallow } from 'enzyme';
 
 describe('Stream', () => {
